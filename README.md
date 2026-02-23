@@ -1,5 +1,9 @@
 # 📟 Ridi Paper E-Ink Server Dashboard
 
+![Screenshot 1](./screenshot1.webp)
+![Screenshot 2](./screenshot2.webp)
+![Screenshot 3](./screenshot3.webp)
+
 이 프로젝트는 구형 전자책 단말기인 **리디북스 페이퍼(1세대)**를 재활용하여 서버 상태를 실시간으로 모니터링하는 **상시거치형 대시보드**로 만드는 프로젝트입니다. 안드로이드 4.2.2의 한계와 전자잉크 디스플레이의 특성을 고려하여 최적화되었습니다.
 
 ---
