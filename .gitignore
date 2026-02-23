@@ -1,0 +1,11 @@
+# macOS 시스템 파일
+.DS_Store
+
+# 빌드 결과물 (배포 시 소스 위주로 공유 권장)
+*.pdf
+*.epub
+
+# 에디터 및 환경 설정
+.vscode/
+.idea/
+*.swp

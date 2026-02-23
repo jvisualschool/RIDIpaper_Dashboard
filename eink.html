@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="60">
+    <title>VIBE E-INK OPS</title>
+    <style>
+        /* Legacy Reset */
+        * {
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .dashboard {
+            width: 95%;
+            margin: 10px auto;
+            border: 2px solid #888;
+            border-radius: 20px;
+            background-color: white;
+            padding: 15px;
+            overflow: hidden;
+            min-height: 96vh;
+        }
+
+        /* Header */
+        .header {
+            width: 100%;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        #big-clock {
+            float: left;
+            font-size: 68px;
+            font-weight: 900;
+            line-height: 1;
+            margin: 0;
+        }
+
+        .title-area {
+            float: right;
+            text-align: right;
+        }
+
+        .title-area h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 900;
+            border-bottom: 3px solid #000;
+            display: inline-block;
+            line-height: 1;
+        }
+
+        #system-date {
+            margin: 4px 0 0 0;
+            font-size: 20px;
+            font-weight: 900;
+            color: #444;
+        }
+
+        /* Content Grid: 2x2 with Float */
+        .content-grid {
+            width: 100%;
+            overflow: hidden;
+            clear: both;
+        }
+
+        .stat-card {
+            float: left;
+            width: 48%;
+            height: 140px;
+            /* 고정 높이 축소로 겹침 방지 */
+            margin: 1%;
+            border: 2px solid #aaa;
+            border-radius: 12px;
+            padding: 10px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .card-label {
+            font-size: 13px;
+            font-weight: 900;
+            margin-bottom: 3px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .card-value {
+            font-size: 32px;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .card-unit {
+            font-size: 14px;
+            margin-left: 2px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 12px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            margin-top: 8px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #333;
+            width: 0%;
+        }
+
+        /* Uptime Special Styling */
+        .uptime-main {
+            font-size: 40px;
+            font-weight: 900;
+            margin-top: 0px;
+            line-height: 1;
+        }
+
+        .uptime-sub {
+            font-size: 13px;
+            color: #555;
+            font-weight: bold;
+            display: block;
+            margin-top: 3px;
+        }
+
+        /* Footer Status Box: Non-Absolute for safety */
+        .footer {
+            clear: both;
+            width: 100%;
+            padding-top: 15px;
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            overflow: hidden;
+        }
+
+        .status-box {
+            float: left;
+            width: 48%;
+            /* 상자 1개와 동일한 폭 */
+            margin: 1%;
+            background: #000;
+            color: #fff;
+            padding: 8px 0;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 900;
+            text-align: center;
+        }
+
+        .sync-text {
+            float: right;
+            font-size: 13px;
+            font-weight: bold;
+            color: #888;
+            padding-top: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <div id="big-clock">00:00</div>
+            <div class="title-area">
+                <h1>SERVER DASHBOARD</h1>
+                <div id="system-date">2026.02.11 (WED)</div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="stat-card">
+                <div class="card-label">CPU LOAD</div>
+                <div class="card-value"><span id="cpu-val">0.00000</span><span class="card-unit">%</span></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="card-label">SERVER UPTIME</div>
+                <div class="uptime-main" id="uptime-big">-- Days</div>
+                <div class="uptime-sub" id="uptime-small">Checking...</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="card-label">MEMORY</div>
+                <div class="card-value"><span id="mem-val">--</span><span class="card-unit">%</span></div>
+                <div class="progress-container">
+                    <div id="mem-bar" class="progress-bar"></div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="card-label">DISK CAPACITY</div>
+                <div class="card-value"><span id="disk-val">--</span><span class="card-unit">%</span></div>
+                <div class="progress-container">
+                    <div id="disk-bar" class="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="status-box" style="height: 52px; padding: 4px 15px;">
+                <div style="float: left; font-size: 40px; line-height: 44px; margin-right: 12px;">☺</div>
+                <div style="float: left; text-align: left;">
+                    <div style="font-size: 11px; color: #bbb; line-height: 1.2; margin-top: 5px;">OPS STATUS:</div>
+                    <div style="font-size: 18px; font-weight: 900; line-height: 1.2;">OPTIMAL</div>
+                </div>
+            </div>
+            <div class="sync-text" id="last-update" style="padding-top: 15px;">SYNC: --:--:--</div>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            var now = new Date();
+            var h = now.getHours();
+            var m = now.getMinutes();
+            h = h < 10 ? '0' + h : h;
+            m = m < 10 ? '0' + m : m;
+            document.getElementById('big-clock').innerText = h + ':' + m;
+
+            var days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            var dateStr = now.getFullYear() + '.' + (now.getMonth() + 1) + '.' + now.getDate() + ' (' + days[now.getDay()] + ')';
+            document.getElementById('system-date').innerText = dateStr;
+        }
+
+        function fetchStats() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'stats.php', true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    try {
+                        var data = JSON.parse(xhr.responseText);
+
+                        // 1. CPU LOAD (5 digits)
+                        document.getElementById('cpu-val').innerText = parseFloat(data.cpu).toFixed(5);
+
+                        // 2. Memory & Disk
+                        document.getElementById('mem-val').innerText = Math.round(data.memory.percent);
+                        document.getElementById('disk-val').innerText = Math.round(data.disk.percent);
+                        document.getElementById('mem-bar').style.width = data.memory.percent + '%';
+                        document.getElementById('disk-bar').style.width = data.disk.percent + '%';
+
+                        // 3. Robust Uptime Parsing
+                        var ut = data.uptime.toLowerCase();
+                        var totalDays = 0;
+
+                        // Extract weeks
+                        var wMatch = ut.match(/(\d+)\s*week/);
+                        if (wMatch) totalDays += parseInt(wMatch[1]) * 7;
+
+                        // Extract days
+                        var dMatch = ut.match(/(\d+)\s*day/);
+                        if (dMatch) totalDays += parseInt(dMatch[1]);
+
+                        // Fallback if it's just hours or minutes (less than a day)
+                        if (totalDays === 0 && ut.indexOf('day') === -1 && ut.indexOf('week') === -1) {
+                            document.getElementById('uptime-big').innerText = "0 Days";
+                        } else {
+                            document.getElementById('uptime-big').innerText = totalDays + " Days";
+                        }
+
+                        // Clean original string for subtext
+                        var cleanUt = data.uptime.replace(/up\s+/i, '').split(',')[0];
+                        if (data.uptime.split(',')[1]) cleanUt += ',' + data.uptime.split(',')[1];
+                        document.getElementById('uptime-small').innerText = cleanUt;
+
+                        document.getElementById('last-update').innerText = 'SYNC: ' + new Date().toLocaleTimeString();
+                    } catch (e) {
+                        document.getElementById('uptime-big').innerText = "ERR";
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        window.onload = function () {
+            updateClock();
+            fetchStats();
+            setInterval(updateClock, 10000);
+            setInterval(fetchStats, 60000);
+        };
+    </script>
+</body>
+
+</html>
